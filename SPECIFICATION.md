@@ -1,8 +1,8 @@
 # FieldKit Architectural Specification (RFC-FK-001)
 
 **Status**: Draft Standard  
-**Author**: Neal Frazier (`@1nc0gn30`)  
-**Organization**: Neal Frazier Tech / NullAI Platform  
+**Author**: 1nc0gn30 (`@1nc0gn30`)  
+**Organization**: NullAI Platform  
 **Date**: November 2026  
 
 ---

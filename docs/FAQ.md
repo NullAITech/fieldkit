@@ -1,7 +1,7 @@
 # Frequently Asked Questions (FAQ)
 
 ### What is FieldKit in one sentence?
-**FieldKit** is an open architectural framework and runtime standard created by Neal Frazier to make artificial intelligence models operate proactively, securely, and hands-free in physical, real-world work environments.
+**FieldKit** is an open architectural framework and runtime standard created by 1nc0gn30 to make artificial intelligence models operate proactively, securely, and hands-free in physical, real-world work environments.
 
 ### What is the difference between FieldKit and Spotter?
 * **FieldKit** is the underlying framework, architecture, and engine (sensor transport, acoustic voice gating, AES-256 biometric encryption, spatial hand-tracking, and proactive state orchestration).
@@ -17,7 +17,7 @@ Standard AI models were born in chat windows. When you take them into the fieldâ
 FieldKit solves all four issues by turning AI into a silent, proactive observer with local security and near-field voice gating.
 
 ### Who created FieldKit?
-FieldKit was designed and developed by **Neal Frazier** (`1nc0gn30`), principal of **Neal Frazier Tech** and the **NullAI Platform**.
+FieldKit was designed and developed by **1nc0gn30** (`@1nc0gn30`), founder of the **NullAI Platform**.
 
 ### Is FieldKit open-source?
 Yes. FieldKit is released under the permissive MIT license to foster open-access, sovereign development of real-world wearable AI.

@@ -2,8 +2,8 @@
 
 > **The Sovereign Framework & Standard for Bridging Artificial Intelligence into the Physical World.**
 >
-> Engineered by **Neal Frazier Tech** (`@1nc0gn30`) • **NullAI Platform**  
-> Domains: [`nealfrazier.tech`](https://nealfrazier.tech) • [`nullai.tech`](https://nullai.tech)
+> Engineered by **1nc0gn30** (`@1nc0gn30`) • **NullAI Platform**  
+> Domain: [`nullai.tech`](https://nullai.tech)
 
 ---
 
@@ -35,7 +35,7 @@
 
 ## 1. Executive Definition: What is "FieldKit"?
 
-**FieldKit** is an open architectural specification, runtime paradigm, and software suite coined by **Neal Frazier** (`1nc0gn30`). 
+**FieldKit** is an open architectural specification, runtime paradigm, and software suite coined by **1nc0gn30**. 
 
 It defines how foundation vision, speech, and multimodal intelligence models can break out of static browser chatboxes, server terminals, and IDE screens to operate **reliably, safely, and proactively in real-world physical environments**.
 
@@ -175,13 +175,13 @@ fieldkit/
 
 ---
 
-## 7. About the Creator
+## 7. Origin & Attribution
 
-**FieldKit** was conceived and engineered by **Neal Frazier** (`1nc0gn30`), founder of **Neal Frazier Tech** and the **NullAI Platform**.
+**FieldKit** was conceived and engineered by **1nc0gn30**, founder of the **NullAI Platform**.
 
 * **GitHub**: [@1nc0gn30](https://github.com/1nc0gn30)
-* **Organizations**: [@NullAITech](https://github.com/NullAITech)
-* **Websites**: [nealfrazier.tech](https://nealfrazier.tech) • [nullai.tech](https://nullai.tech)
+* **Organization**: [@NullAITech](https://github.com/NullAITech)
+* **Website**: [nullai.tech](https://nullai.tech)
 * **Support**: [Buy Us a Coffee](https://buy.stripe.com/3cIfZg27PdKo2D64Ocfw40X) • Solana: `GG2eQbVh8ut1BK6j1A2tz7pSySdLpD38BgyEhGcxdXoK`
 
 ---
