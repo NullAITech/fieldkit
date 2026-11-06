@@ -3,7 +3,7 @@
 > **The Sovereign Framework & Standard for Bridging Artificial Intelligence into the Physical World.**
 >
 > Engineered by **1nc0gn30** (`@1nc0gn30`) • **NullAI Platform**  
-> Domain: [`nullai.tech`](https://nullai.tech)
+> Portal: [`https://nullai-fieldkit.netlify.app`](https://nullai-fieldkit.netlify.app) • Domain: [`nullai.tech`](https://nullai.tech)
 
 ---
 
@@ -160,17 +160,29 @@ For a software system or hardware suite to be designated **FieldKit-Compliant**,
 fieldkit/
 ├── README.md                      # Complete FieldKit Specification & Standard
 ├── SPECIFICATION.md               # Formal RFC-style architecture guidelines
+├── site/                          # Avant-Garde Uncommon Web Portal (webdev.teknium.io)
+│   ├── index.html                 # Semantic HTML5, Schema.org graph, Live HUD & Workbench
+│   ├── style.css                  # Pure CSS conic border beam, responsive triple-viewport
+│   └── app.js                     # Bayer 4x4 dither canvas, Braille tracker & WebAudio
+├── mcp/                           # Official FieldKit MCP Server for AI Agents
+│   ├── fieldkit_mcp_server.py     # Executable JSON-RPC stdio Model Context Protocol server
+│   └── README.md                  # Claude Desktop, Cursor & Hermes setup instructions
+├── sdk/python/                    # Python 3.9+ Edge SDK Runtime
+│   └── fieldkit/                  # Mission DAG, Sensory Ingest, Voice Gate, Biometric Vault
+├── cli/                           # Interactive Terminal Runner (fieldkit)
+├── templates/                     # Production-ready YAML Mission Task Schemas
+│   ├── industrial-repair/         # 480V LOTO & Centrifugal Mechanical Seal Overhaul
+│   ├── emergency-medical/         # TCCC Care Under Fire Extremity Tourniquet
+│   └── security-inspection/       # Datacenter Biometric & Anti-Tamper Seal Sweep
 ├── architecture/
 │   ├── 01_sensor_transport.md     # DAT SDK, WebRTC, low-latency video pipelines
 │   ├── 02_spatial_grounding.md    # Sub-130ms bounding box & hand tracking spec
 │   ├── 03_voice_gating.md         # Acoustic near-field spectral isolation
 │   ├── 04_biometric_vault.md      # AES-256-GCM on-device KeyStore protocol
 │   └── 05_proactive_loop.md       # State-machine DAG & proactive coaching
-├── examples/
-│   ├── python/                    # Reference implementations for edge ingest
-│   └── android/                   # Reference Android hardware service
 └── docs/
-    └── FAQ.md                     # Terminology breakdown & industry contrast
+    ├── FAQ.md                     # Terminology breakdown & industry contrast
+    └── TERMINOLOGY.md             # Formal lexicon & 10 architectural definitions
 ```
 
 ---
