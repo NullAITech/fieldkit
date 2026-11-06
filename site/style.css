@@ -55,6 +55,43 @@ body {
   mix-blend-mode: multiply;
 }
 
+/* Atmospheric Aurora Mesh & Ambient Dither */
+.ambient-mesh {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(245, 184, 46, 0.08) 0%, transparent 48%),
+    radial-gradient(circle at 82% 22%, rgba(77, 232, 255, 0.06) 0%, transparent 45%),
+    radial-gradient(circle at 50% 68%, rgba(78, 255, 155, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 20% 85%, rgba(245, 184, 46, 0.05) 0%, transparent 40%);
+  filter: blur(50px);
+  opacity: 0.9;
+  animation: aurora-breathe 14s ease-in-out infinite alternate;
+}
+
+@keyframes aurora-breathe {
+  0% { transform: scale(1) translate(0, 0); opacity: 0.8; }
+  50% { transform: scale(1.04) translate(10px, -15px); opacity: 1; }
+  100% { transform: scale(0.98) translate(-10px, 15px); opacity: 0.85; }
+}
+
+.dither-grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image: radial-gradient(rgba(245, 184, 46, 0.06) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.7;
+}
+
+main, header, footer {
+  position: relative;
+  z-index: 10;
+}
+
 /* Header */
 .bar {
   position: sticky;
@@ -316,6 +353,46 @@ h2, h3 {
   flex-wrap: wrap;
 }
 
+.hud-sensor-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+  margin-bottom: 10px;
+  font-size: 0.72rem;
+  color: var(--fg-muted);
+  flex-wrap: wrap;
+}
+
+.sensor-pill-group {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.sensor-pill {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  color: var(--fg-muted);
+  font-size: 0.70rem;
+  font-family: var(--mono);
+  padding: 2px 7px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sensor-pill:hover, .sensor-pill.active {
+  border-color: var(--cyan);
+  color: var(--cyan);
+  background: rgba(77, 232, 255, 0.12);
+  box-shadow: 0 0 8px rgba(77, 232, 255, 0.2);
+}
+
 .target-pill {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--border-subtle);
@@ -559,11 +636,133 @@ h2, h3 {
   overflow: hidden;
 }
 
+.bento-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(350px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(245, 184, 46, 0.08), transparent 70%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.bento-card:hover::before {
+  opacity: 1;
+}
+
 .bento-card:hover {
-  border-color: var(--border);
+  border-color: var(--border-bright);
   background: var(--bg-card-hover);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5), 0 0 16px rgba(245, 184, 46, 0.08);
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.hw-badge {
+  font-size: 0.68rem;
+  font-family: var(--mono);
+  color: var(--cyan);
+  background: rgba(77, 232, 255, 0.08);
+  border: 1px solid rgba(77, 232, 255, 0.25);
+  padding: 2px 7px;
+  border-radius: 3px;
+  letter-spacing: 0.04em;
+}
+
+/* Interactive Code Snippets & Copy Buttons */
+.code-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.copy-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-subtle);
+  color: var(--fg-muted);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  padding: 3px 9px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.copy-btn:hover {
+  color: var(--g);
+  border-color: var(--g);
+  background: rgba(245, 184, 46, 0.1);
+}
+
+.copy-btn.copied {
+  color: var(--green);
+  border-color: var(--green);
+  background: rgba(78, 255, 155, 0.15);
+}
+
+/* MCP Live Query Tester */
+.mcp-console-wrap {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.mcp-console-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.mcp-tool-select {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--border-bright);
+  color: var(--fg);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+}
+
+.mcp-run-btn {
+  background: var(--cyan);
+  color: #000;
+  border: 1px solid var(--cyan);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mcp-run-btn:hover {
+  box-shadow: 0 0 14px rgba(77, 232, 255, 0.4);
+}
+
+kbd {
+  display: inline-block;
+  padding: 2px 5px;
+  font-size: 0.68rem;
+  font-family: var(--mono);
+  color: var(--g);
+  background: rgba(245, 184, 46, 0.1);
+  border: 1px solid rgba(245, 184, 46, 0.3);
+  border-radius: 3px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
 }
 
 .bento-card.wide {

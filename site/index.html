@@ -88,6 +88,8 @@
 </head>
 <body>
 
+<div class="ambient-mesh" aria-hidden="true"></div>
+<div class="dither-grain" aria-hidden="true"></div>
 <div class="crt-overlay" aria-hidden="true"></div>
 
 <header class="bar">
@@ -138,11 +140,25 @@
           <span style="font-size:0.8rem; font-weight:700; color:#fff;">SKELETAL RAYCAST &amp; PINCH SIMULATOR</span>
         </div>
         <div class="hud-targets">
-          <button type="button" class="target-pill active" data-target="loto">⚡ 480V Breaker</button>
-          <button type="button" class="target-pill" data-target="pump">🔧 Pump Casing</button>
-          <button type="button" class="target-pill" data-target="tccc">🩸 Tourniquet</button>
-          <button type="button" class="target-pill" data-target="tamper">🔒 Tamper Seal</button>
+          <button type="button" class="target-pill active" data-target="loto" title="Target 1: 480V Breaker (Key 1)">⚡ 480V Breaker</button>
+          <button type="button" class="target-pill" data-target="pump" title="Target 2: Centrifugal Pump (Key 2)">🔧 Pump Casing</button>
+          <button type="button" class="target-pill" data-target="tccc" title="Target 3: Tourniquet (Key 3)">🩸 Tourniquet</button>
+          <button type="button" class="target-pill" data-target="tamper" title="Target 4: Tamper Seal (Key 4)">🔒 Tamper Seal</button>
           <button type="button" id="sfxToggle" class="hud-sfx-toggle on" title="Toggle WebAudio Procedural Feedback">♫ SFX: ON</button>
+        </div>
+      </div>
+
+      <!-- Sensor Pipeline Selector Bar -->
+      <div class="hud-sensor-bar">
+        <div class="sensor-pill-group">
+          <span style="color:var(--g); font-weight:700; font-size:0.70rem;">SENSOR RASTER:</span>
+          <button type="button" class="sensor-pill active" data-mode="bayer">▦ BAYER 4x4</button>
+          <button type="button" class="sensor-pill" data-mode="sobel">⬡ SOBEL EDGE</button>
+          <button type="button" class="sensor-pill" data-mode="depth">◉ LiDAR DEPTH</button>
+          <button type="button" class="sensor-pill" data-mode="thermal">◎ THERMAL IR</button>
+        </div>
+        <div style="font-size:0.70rem; color:var(--fg-muted);">
+          HOTKEYS: <kbd>1-4</kbd> Target · <kbd>M</kbd> Mode · <kbd>SPACE</kbd> Advance Step
         </div>
       </div>
 
@@ -242,7 +258,10 @@
 
     <div class="bento">
       <div class="bento-card">
-        <div class="card-glyph">👁️</div>
+        <div class="card-top">
+          <div class="card-glyph">👁️</div>
+          <span class="hw-badge">FOV STREAM · 30 FPS</span>
+        </div>
         <h3>1. First-Person Sensory Ingest</h3>
         <p>
           Ingests real-time video and audio from smart glasses (Ray-Ban Meta, Android wearables), chest cams, and inspection drones with motion-stabilized ROI cropping.
@@ -250,7 +269,10 @@
       </div>
 
       <div class="bento-card">
-        <div class="card-glyph">⚡</div>
+        <div class="card-top">
+          <div class="card-glyph">⚡</div>
+          <span class="hw-badge">PROACTIVE DAG ENGINE</span>
+        </div>
         <h3>2. Proactive Anticipation</h3>
         <p>
           Instead of waiting for a wake-word or query, FieldKit tracks state changes against a mission checklist and speaks the next instruction before you have to ask.
@@ -258,7 +280,10 @@
       </div>
 
       <div class="bento-card">
-        <div class="card-glyph">🛡️</div>
+        <div class="card-top">
+          <div class="card-glyph">🛡️</div>
+          <span class="hw-badge">HARDWARE ENCLAVE AES-256</span>
+        </div>
         <h3>3. Sovereign Privacy Vault</h3>
         <p>
           Zero passive recording. Video feeds remain local to edge memory. Audio streams are isolated to the wearer's voiceprint, and external transmissions require strict confirmation.
@@ -266,7 +291,10 @@
       </div>
 
       <div class="bento-card wide">
-        <div class="card-glyph">🌐</div>
+        <div class="card-top">
+          <div class="card-glyph">🌐</div>
+          <span class="hw-badge">LOCAL-FIRST MESH · SUB-127MS</span>
+        </div>
         <h3>4. Resilient Local-First Edge Execution</h3>
         <p>
           Designed to function when cell towers drop. High-frequency safety checks and step validations execute on-device or via local relay, syncing state seamlessly when uplink restores.
@@ -274,7 +302,10 @@
       </div>
 
       <div class="bento-card">
-        <div class="card-glyph">🎯</div>
+        <div class="card-top">
+          <div class="card-glyph">🎯</div>
+          <span class="hw-badge">TSM DETERMINISTIC DAG</span>
+        </div>
         <h3>Mission-Driven State Machine</h3>
         <p>
           Breaks complex tasks down into deterministic atomic checkpoints. If a step is skipped or performed out of order, FieldKit alerts the operator immediately.
@@ -292,7 +323,10 @@
 
     <div class="bento" style="margin-bottom:70px;">
       <div class="bento-card">
-        <div class="card-glyph">⚙️</div>
+        <div class="card-top">
+          <div class="card-glyph">⚙️</div>
+          <span class="hw-badge">OSHA / NFPA 70E</span>
+        </div>
         <h3>Industrial Pump Overhaul</h3>
         <p>
           Lockout/Tagout (LOTO) 480V electrical verification, manifold zero-pressure gauge checks, star-pattern casing disassembly, and silicon-carbide mechanical seal seat inspection.
@@ -303,7 +337,10 @@
       </div>
 
       <div class="bento-card">
-        <div class="card-glyph">🩸</div>
+        <div class="card-top">
+          <div class="card-glyph">🩸</div>
+          <span class="hw-badge">CoTCCC / MIL-STD</span>
+        </div>
         <h3>TCCC Care Under Fire</h3>
         <p>
           Rapid extremity arterial hemorrhage control: threat suppression verification, rapid wound identification, high-and-tight CAT tourniquet placement, and windlass torque lock.
@@ -314,7 +351,10 @@
       </div>
 
       <div class="bento-card">
-        <div class="card-glyph">🔒</div>
+        <div class="card-top">
+          <div class="card-glyph">🔒</div>
+          <span class="hw-badge">NIST 800-53 / SOC2</span>
+        </div>
         <h3>Datacenter Tamper Sweep</h3>
         <p>
           Physical layer security audits: biometric cage door latch verification, cold-aisle server tray tamper seal checks, inline hardware tap detection, and CRAC ambient temperature logging.
@@ -375,9 +415,12 @@
     </section>
 
     <div class="bento-card wide" style="margin: 0 auto 70px; background: rgba(8, 11, 16, 0.95); border: 1px solid var(--border);">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+      <div class="code-header">
         <span style="color:var(--g); font-weight:700; font-size:0.95rem;">⚡ FieldKit CLI &amp; Python 3.9+ Engine</span>
-        <span class="spec-chip">Package: fieldkit-sdk v1.0.0</span>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <span class="spec-chip">Package: fieldkit-sdk v1.0.0</span>
+          <button type="button" class="copy-btn" data-copy="pip install -e sdk/python/ && fieldkit run templates/industrial-repair/mission.yaml">Copy Command</button>
+        </div>
       </div>
       <p style="color:var(--fg-muted); margin-bottom:16px; font-size:0.9rem;">
         Run deterministic missions directly from your terminal or integrate the state machine, raycasting evaluator, and voice gate into your own edge application.
@@ -411,9 +454,12 @@ fieldkit vault-audit</code></pre>
     </section>
 
     <div class="bento-card wide" style="margin: 0 auto 70px; background: rgba(8, 11, 16, 0.95); border: 1px solid var(--border);">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+      <div class="code-header">
         <span style="color:var(--g); font-weight:700; font-size:0.95rem;">🔌 MCP Stdio Bridge: fieldkit_mcp_server.py</span>
-        <span class="spec-chip">Protocol: 2024-11-05</span>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <span class="spec-chip">Protocol: 2024-11-05</span>
+          <button type="button" class="copy-btn" data-copy='{\n  "mcpServers": {\n    "fieldkit": {\n      "command": "python3",\n      "args": ["/path/to/fieldkit/mcp/fieldkit_mcp_server.py"]\n    }\n  }\n}'>Copy Config</button>
+        </div>
       </div>
       <p style="color:var(--fg-muted); margin-bottom:16px; font-size:0.9rem;">
         Exposes 6 standard tools allowing LLMs to orchestrate physical missions, evaluate camera bounding targets, track hands-busy states, and verify biometric vault isolation.
@@ -429,6 +475,31 @@ fieldkit vault-audit</code></pre>
   }
 }</code></pre>
       </div>
+
+      <!-- Live Interactive MCP Tester Console -->
+      <div class="mcp-console-wrap">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+          <span style="font-size:0.75rem; color:var(--cyan); font-weight:700; font-family:var(--mono);">⚡ LIVE MCP TOOL QUERY CONSOLE</span>
+          <span style="font-size:0.70rem; color:var(--fg-muted); font-family:var(--mono);">JSON-RPC 2.0 PROTOCOL</span>
+        </div>
+        <div class="mcp-console-controls">
+          <select id="mcpToolSelect" class="mcp-tool-select" aria-label="Select MCP Tool">
+            <option value="eval">fieldkit_evaluate_fov_frame</option>
+            <option value="progress">fieldkit_progress_step</option>
+            <option value="vault">fieldkit_vault_audit</option>
+            <option value="status">fieldkit_get_mission_status</option>
+          </select>
+          <button type="button" id="mcpRunBtn" class="mcp-run-btn">Run MCP Tool Test ⚡</button>
+        </div>
+        <pre style="background:rgba(0,0,0,0.85); border:1px solid var(--border-subtle); padding:14px; border-radius:5px; font-size:0.75rem; color:var(--cyan); overflow-x:auto;"><code id="mcpConsoleOutput">{
+  "jsonrpc": "2.0",
+  "result": {
+    "tool": "fieldkit_evaluate_fov_frame",
+    "status": "READY. Click 'Run MCP Tool Test' to query live engine."
+  }
+}</code></pre>
+      </div>
+
       <p style="margin-top:14px;">
         <a href="https://github.com/NullAITech/fieldkit/tree/main/mcp" target="_blank" rel="noopener noreferrer" style="color:var(--g); font-size:0.88rem; text-decoration:none;">
           Explore MCP Server Documentation &amp; Tools →
