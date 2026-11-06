@@ -393,6 +393,28 @@ h2, h3 {
   box-shadow: 0 0 8px rgba(77, 232, 255, 0.2);
 }
 
+.webcam-btn {
+  background: rgba(78, 255, 155, 0.08);
+  border: 1px solid rgba(78, 255, 155, 0.3);
+  color: var(--green);
+  font-size: 0.70rem;
+  font-family: var(--mono);
+  padding: 2px 8px;
+  border-radius: 3px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.15s ease;
+}
+
+.webcam-btn:hover, .webcam-btn.active {
+  background: var(--green);
+  color: #000;
+  font-weight: 700;
+  box-shadow: 0 0 10px rgba(78, 255, 155, 0.35);
+}
+
 .target-pill {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--border-subtle);
@@ -585,6 +607,212 @@ h2, h3 {
 .wb-btn.secondary:hover {
   border-color: var(--fg);
   color: #fff;
+}
+
+/* Interactive Mission DAG Node Visualizer */
+.dag-container {
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  background: rgba(4, 7, 12, 0.75);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.dag-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dag-track {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: max-content;
+  padding-bottom: 4px;
+}
+
+.dag-node {
+  background: rgba(14, 18, 26, 0.9);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 140px;
+  position: relative;
+}
+
+.dag-node:hover {
+  border-color: var(--g);
+  background: rgba(245, 184, 46, 0.08);
+  transform: translateY(-2px);
+}
+
+.dag-node.active {
+  border-color: var(--g);
+  background: rgba(245, 184, 46, 0.15);
+  box-shadow: 0 0 14px rgba(245, 184, 46, 0.25);
+}
+
+.dag-node.completed {
+  border-color: var(--green);
+  background: rgba(78, 255, 155, 0.08);
+}
+
+.dag-node.interlock {
+  border-color: var(--cyan);
+  background: rgba(77, 232, 255, 0.08);
+  border-style: dashed;
+}
+
+.dag-node-badge {
+  font-size: 0.65rem;
+  font-family: var(--mono);
+  font-weight: 700;
+  margin-bottom: 3px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.dag-node.completed .dag-node-badge { color: var(--green); }
+.dag-node.active .dag-node-badge { color: var(--g); }
+.dag-node.interlock .dag-node-badge { color: var(--cyan); }
+.dag-node:not(.completed):not(.active):not(.interlock) .dag-node-badge { color: var(--fg-muted); }
+
+.dag-node-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.dag-connector {
+  display: flex;
+  align-items: center;
+  color: var(--fg-muted);
+  font-size: 0.8rem;
+}
+
+.dag-connector.completed {
+  color: var(--green);
+}
+
+/* In-Browser Mission YAML Builder & Validator Playground */
+.yaml-builder-wrap {
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.yaml-builder-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.yaml-templates-bar {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.yaml-tpl-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  color: var(--fg-muted);
+  font-size: 0.72rem;
+  font-family: var(--mono);
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.yaml-tpl-btn:hover {
+  border-color: var(--g);
+  color: var(--g);
+  background: rgba(245, 184, 46, 0.1);
+}
+
+.yaml-editor-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.yaml-editor-pane {
+  display: flex;
+  flex-direction: column;
+}
+
+.yaml-textarea {
+  width: 100%;
+  height: 220px;
+  background: #020305;
+  border: 1px solid var(--border-bright);
+  border-radius: 6px;
+  color: var(--green);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  padding: 12px;
+  resize: vertical;
+  outline: none;
+  tab-size: 2;
+}
+
+.yaml-textarea:focus {
+  border-color: var(--g);
+  box-shadow: 0 0 14px rgba(245, 184, 46, 0.2);
+}
+
+.yaml-validation-output {
+  height: 220px;
+  background: #030407;
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 12px;
+  overflow-y: auto;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--cyan);
+}
+
+.yaml-actions-bar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.yaml-run-btn {
+  background: var(--g);
+  color: #000;
+  border: 1px solid var(--g);
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 7px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.yaml-run-btn:hover {
+  background: var(--g-bright);
+  box-shadow: 0 0 14px rgba(245, 184, 46, 0.4);
 }
 
 /* Architectural Pipeline Flow Visualizer */
@@ -1061,6 +1289,9 @@ footer a:hover {
 
 /* Triple Viewport Responsiveness */
 @media (max-width: 960px) {
+  .yaml-editor-grid {
+    grid-template-columns: 1fr;
+  }
   .flow-tier.split {
     grid-template-columns: 1fr;
   }

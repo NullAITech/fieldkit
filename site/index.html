@@ -159,6 +159,7 @@
           <button type="button" class="sensor-pill" data-mode="sobel">⬡ SOBEL EDGE</button>
           <button type="button" class="sensor-pill" data-mode="depth">◉ LiDAR DEPTH</button>
           <button type="button" class="sensor-pill" data-mode="thermal">◎ THERMAL IR</button>
+          <button type="button" id="webcamBtn" class="webcam-btn" title="Stream your local camera directly into client-side shaders (100% on-device)">📷 WEBCAM INGEST</button>
         </div>
         <div style="font-size:0.70rem; color:var(--fg-muted);">
           HOTKEYS: <kbd>1-4</kbd> Target · <kbd>M</kbd> Mode · <kbd>SPACE</kbd> Advance Step
@@ -166,6 +167,7 @@
       </div>
 
       <div class="canvas-container">
+        <video id="webcamVideo" playsinline autoplay muted style="display:none;"></video>
         <canvas id="fieldkitCanvas" width="880" height="280" aria-label="FieldKit real-time physical AI raycast simulation canvas"></canvas>
       </div>
 
@@ -461,6 +463,17 @@
         <button type="button" class="wb-tab" data-mission="datacenter">🔒 Datacenter Tamper Sweep</button>
       </div>
 
+      <!-- Interactive Mission DAG Node Visualizer -->
+      <div class="dag-container" id="dagContainer">
+        <div class="dag-header-row">
+          <span style="font-size:0.75rem; color:var(--g); font-weight:700; font-family:var(--mono);">TEMPORAL STATE MACHINE (DAG) CHECKPOINT TRACK</span>
+          <span style="font-size:0.70rem; color:var(--fg-muted); font-family:var(--mono);">CLICK ANY NODE TO GROUND STATE</span>
+        </div>
+        <div class="dag-track" id="dagTrack">
+          <!-- Dynamically populated by app.js -->
+        </div>
+      </div>
+
       <div class="wb-panel">
         <div class="wb-col">
           <div class="wb-label" id="wbStepBadge">CHECKPOINT: STEP_02_PRESSURE_BLEED · GAUGE_PI_104_DIAL</div>
@@ -473,7 +486,8 @@
           </div>
           <div class="wb-controls">
             <button type="button" id="wbAdvanceBtn" class="wb-btn">Advance Physical Step [SPACE] →</button>
-            <button type="button" id="wbResetBtn" class="wb-btn secondary">↺ Reset Mission</button>
+            <button type="button" id="wbVoiceToggle" class="wb-btn secondary" title="Toggle client-side neural voice readout via Web Speech API">🗣️ Voice Coach: ON</button>
+            <button type="button" id="wbResetBtn" class="wb-btn secondary">↺ Reset</button>
           </div>
         </div>
 
@@ -483,6 +497,39 @@
   "framework": "FieldKit v1.0",
   "status": "INITIALIZING..."
 }</code></pre>
+        </div>
+      </div>
+
+      <!-- In-Browser Mission YAML Builder & Validator Playground -->
+      <div class="yaml-builder-wrap" id="yamlBuilder">
+        <div class="yaml-builder-header">
+          <div>
+            <span style="font-size:0.88rem; color:#fff; font-weight:700; font-family:var(--display);">🛠️ Custom Mission YAML Builder &amp; RFC Validator</span>
+            <p style="font-size:0.78rem; color:var(--fg-muted); margin-top:2px;">Author custom frontline task DAGs, validate tolerances against the FieldKit RFC, and preview in real time.</p>
+          </div>
+          <div class="yaml-templates-bar">
+            <span style="font-size:0.70rem; color:var(--g); font-weight:700;">PRESETS:</span>
+            <button type="button" class="yaml-tpl-btn" data-tpl="loto">Pump LOTO</button>
+            <button type="button" class="yaml-tpl-btn" data-tpl="tccc">TCCC CAT</button>
+            <button type="button" class="yaml-tpl-btn" data-tpl="datacenter">Tamper Seal</button>
+            <button type="button" class="yaml-tpl-btn" data-tpl="custom">Blank RFC</button>
+          </div>
+        </div>
+
+        <div class="yaml-editor-grid">
+          <div class="yaml-editor-pane">
+            <textarea id="yamlTextarea" class="yaml-textarea" spellcheck="false" aria-label="FieldKit Mission YAML Editor"></textarea>
+          </div>
+          <div class="yaml-editor-pane">
+            <pre id="yamlValidationConsole" class="yaml-validation-output" aria-live="polite"><code>// FieldKit RFC Validation Engine v1.0.0
+// Ready. Click "Validate against RFC" to inspect mission syntax.</code></pre>
+          </div>
+        </div>
+
+        <div class="yaml-actions-bar">
+          <button type="button" id="yamlValidateBtn" class="yaml-run-btn">Validate against RFC ⚡</button>
+          <button type="button" id="yamlLoadSimulatorBtn" class="wb-btn secondary">Load into 3D HUD</button>
+          <button type="button" id="yamlDownloadBtn" class="wb-btn secondary">⬇️ Download mission.yaml</button>
         </div>
       </div>
     </div>
