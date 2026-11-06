@@ -1,0 +1,62 @@
+# FieldKit Mission Specification v1.0
+schema_version: "1.0.0"
+mission_id: "fk-physical-datacenter-audit-01"
+title: "Datacenter Physical Security & Tamper Sweep"
+category: "physical_security"
+author: "1nc0gn30"
+organization: "NullAI Platform"
+license: "MIT"
+
+requirements:
+  hands_busy: true
+  min_fov_fps: 30
+  near_field_voice_gate: true
+  privacy_vault_strict: true
+  tamper_detection_model: "nullai-tamper-v2"
+
+state_machine:
+  initial_step: "step_verify_badge_access_zone"
+  failure_step: "abort_security_breach"
+
+  steps:
+    - id: "step_verify_badge_access_zone"
+      name: "Scan Cage Biometric Entry"
+      prompt_speech: "Entering Server Hall B. Scan card reader and check door latch lock engagement behind you."
+      expected_action: "door_closure_check"
+      verification_rules:
+        visual_target: "maglock_strike_plate"
+        target_state: "locked_secure"
+      on_success: "step_inspect_rack_seals"
+
+    - id: "step_inspect_rack_seals"
+      name: "Audit Tamper-Evident Seals on Cold-Aisle Racks"
+      prompt_speech: "Walk Rack Row 04. Check tamper tape seals across top and bottom server tray latches."
+      expected_action: "visual_seal_inspection"
+      verification_rules:
+        visual_target: "tamper_tape_void_pattern"
+        tamper_detected: false
+      on_success: "step_audit_pdu_cables"
+
+    - id: "step_audit_pdu_cables"
+      name: "Identify Unauthorized Hardware / Hardware Implants"
+      prompt_speech: "Inspect PDU and switch backplanes. Scan for unauthorized inline keystrokes, LAN tap dongles, or unknown USB drops."
+      expected_action: "backplane_sweep"
+      verification_rules:
+        visual_target: "inline_hardware_tap"
+        anomaly_score_threshold: 0.15
+      on_success: "step_log_environmental_sensors"
+
+    - id: "step_log_environmental_sensors"
+      name: "Log CRAC Unit Ambient Levels"
+      prompt_speech: "Read the digital display on CRAC unit 2. Ensure ambient return temperature is below 74 degrees Fahrenheit."
+      expected_action: "ocr_display_read"
+      verification_rules:
+        visual_target: "seven_segment_led"
+        max_temperature_f: 74.0
+      on_success: "mission_complete"
+
+  terminal_states:
+    mission_complete:
+      prompt_speech: "Row audit complete. All 14 tamper seals intact. Zero unauthorized implants found. Log saved to vault."
+    abort_security_breach:
+      prompt_speech: "SECURITY ALERT: Broken tamper seal or rogue hardware implant detected. Lockdown beacon triggered."

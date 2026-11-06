@@ -1,0 +1,71 @@
+# FieldKit Mission Specification v1.0
+schema_version: "1.0.0"
+mission_id: "fk-tccc-tourniquet-protocol-01"
+title: "Tactical Combat Casualty Care (TCCC) Limb Hemorrhage"
+category: "emergency_medicine"
+author: "1nc0gn30"
+organization: "NullAI Platform"
+license: "MIT"
+
+requirements:
+  hands_busy: true
+  min_fov_fps: 30
+  near_field_voice_gate: true
+  max_turn_latency_ms: 65
+  high_stress_audio_mode: true
+
+state_machine:
+  initial_step: "step_threat_suppression"
+  failure_step: "abort_scene_unsafe"
+
+  steps:
+    - id: "step_threat_suppression"
+      name: "Confirm Care Under Fire Baseline"
+      prompt_speech: "Take cover or confirm hostile threat neutralized. Move casualty to shelter if active fire continues."
+      expected_action: "secure_perimeter"
+      verification_rules:
+        scene_stability: "sheltered"
+      on_success: "step_locate_arterial_bleed"
+
+    - id: "step_locate_arterial_bleed"
+      name: "Identify Pulsatile or Pooling Hemorrhage"
+      prompt_speech: "Locate primary bleeding site. Check clothing for rapid expansion or pooling."
+      expected_action: "sweep_limb"
+      verification_rules:
+        visual_target: "arterial_blood_pool"
+        bounding_box_required: true
+      on_success: "step_apply_tourniquet_high_tight"
+
+    - id: "step_apply_tourniquet_high_tight"
+      name: "Apply CAT Tourniquet High and Tight"
+      prompt_speech: "Apply Tourniquet high and tight, two to three inches above bleeding site, directly over uniform if in care under fire."
+      expected_action: "cinch_strap"
+      verification_rules:
+        visual_target: "cat_tourniquet_strap"
+        strap_slack_pulled: true
+      on_success: "step_twist_windlass"
+
+    - id: "step_twist_windlass"
+      name: "Rotate Windlass Rod Until Bleeding Stops"
+      prompt_speech: "Twist windlass rod continuously until pulsatile bleed halts completely and distal pulse ceases."
+      expected_action: "rotate_windlass"
+      verification_rules:
+        visual_target: "windlass_rod_rotation"
+        minimum_rotations: 3
+        active_bleed_state: "stopped"
+      on_success: "step_lock_windlass_clip"
+
+    - id: "step_lock_windlass_clip"
+      name: "Lock Rod in Windlass Clip & Log Timestamp"
+      prompt_speech: "Lock rod securely into clip. Fasten the time strap and write time of application on strap with marker."
+      expected_action: "clip_lock_and_write"
+      verification_rules:
+        visual_target: "time_strap_fastened"
+        timestamp_written: true
+      on_success: "mission_complete"
+
+  terminal_states:
+    mission_complete:
+      prompt_speech: "Tourniquet secured. Distal hemorrhage arrested. Check casualty airway and prepare for transport."
+    abort_scene_unsafe:
+      prompt_speech: "ALERT: Scene compromised. Disengage and move to secondary extraction point."

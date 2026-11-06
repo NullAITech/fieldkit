@@ -1,0 +1,79 @@
+# FieldKit Mission Specification v1.0
+schema_version: "1.0.0"
+mission_id: "fk-industrial-pump-seal-01"
+title: "Centrifugal Pump Mechanical Seal Overhaul"
+category: "industrial_maintenance"
+author: "1nc0gn30"
+organization: "NullAI Platform"
+license: "MIT"
+
+requirements:
+  hands_busy: true
+  min_fov_fps: 30
+  near_field_voice_gate: true
+  max_turn_latency_ms: 120
+  ppe_verification:
+    - "safety_glasses"
+    - "nitrile_or_leather_gloves"
+    - "steel_toe_boots"
+
+state_machine:
+  initial_step: "step_lockout_tagout"
+  failure_step: "abort_safety_trip"
+  
+  steps:
+    - id: "step_lockout_tagout"
+      name: "Electrical & Pressure Isolation (LOTO)"
+      prompt_speech: "Step one: Verify motor breaker is open and attach your physical lockout tag to the disconnect lever."
+      expected_action: "attach_padlock_to_breaker"
+      verification_rules:
+        visual_target: "breaker_switch_480v"
+        target_state: "locked_in_off_position"
+        pinch_detected: true
+      on_success: "step_verify_zero_pressure"
+      on_timeout_seconds: 180
+      timeout_speech: "Reminder: Breaker lock must be physically confirmed before touching pump casing."
+
+    - id: "step_verify_zero_pressure"
+      name: "Manifold Pressure Verification"
+      prompt_speech: "Look at the suction and discharge pressure gauges. Confirm needle reads zero psi."
+      expected_action: "visual_check_gauge"
+      verification_rules:
+        visual_target: "analog_dial_gauge"
+        target_state: "needle_at_zero"
+        gauge_reading_max: 0.0
+      on_success: "step_loosen_casing_bolts"
+      on_failure: "step_lockout_tagout"
+
+    - id: "step_loosen_casing_bolts"
+      name: "Loosen Casing Bolts Star Pattern"
+      prompt_speech: "Zero pressure confirmed. Use 19-millimeter socket to break the 6 casing bolts in a star pattern."
+      expected_action: "wrench_rotation"
+      verification_rules:
+        visual_target: "hex_bolt_flange"
+        minimum_manipulations: 6
+      on_success: "step_extract_seal_housing"
+
+    - id: "step_extract_seal_housing"
+      name: "Inspect Old Mechanical Seal"
+      prompt_speech: "Carefully slide seal gland back. Inspect the silicon carbide face for thermal cracking or pitting."
+      expected_action: "gland_removal"
+      verification_rules:
+        visual_target: "seal_face_ring"
+        defect_classification: ["thermal_checking", "concentric_scoring", "o_ring_extrusion"]
+      on_success: "step_seat_new_seal"
+
+    - id: "step_seat_new_seal"
+      name: "Lubricate & Seat New Seal"
+      prompt_speech: "Apply pure silicone lube to shaft O-ring. Press new seal face squarely until it seats against shaft shoulder."
+      expected_action: "press_fit"
+      verification_rules:
+        visual_target: "new_seal_cartridge"
+        target_state: "flush_seated"
+      on_success: "mission_complete"
+
+  terminal_states:
+    mission_complete:
+      prompt_speech: "Seal replacement verified. Casing ready for torque-down. Great work."
+    abort_safety_trip:
+      prompt_speech: "SAFETY ALERT: Live voltage or residual pressure detected. Step back immediately."
