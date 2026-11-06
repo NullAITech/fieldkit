@@ -99,6 +99,7 @@
     <a href="#why" class="nav-link">Why FieldKit</a>
     <a href="#pillars" class="nav-link">Pillars</a>
     <a href="#templates" class="nav-link">Templates</a>
+    <a href="#sdk" class="nav-link">SDK &amp; CLI</a>
     <a href="#mcp" class="nav-link">MCP Server</a>
     <a href="#contribute" class="nav-link">Contribute</a>
     <a href="https://github.com/NullAITech/fieldkit" target="_blank" rel="noopener noreferrer" class="nav-link nav-cta">GitHub</a>
@@ -294,6 +295,42 @@
           <a href="https://github.com/NullAITech/fieldkit/blob/main/templates/security-inspection/mission.yaml" target="_blank" rel="noopener noreferrer" style="color:var(--g);text-decoration:none;font-size:0.85rem;">View YAML Spec →</a>
         </p>
       </div>
+    </div>
+
+    <!-- SDK & CLI Section -->
+    <section id="sdk" class="sec-head">
+      <h2>Open-Source Python SDK &amp; CLI Runtime</h2>
+      <p>
+        Build custom wearable agents, parse state machines, and simulate raycasting on Linux, Android, and macOS.
+      </p>
+    </section>
+
+    <div class="bento-card wide" style="margin: 0 auto 70px; background: rgba(8, 11, 16, 0.95); border: 1px solid var(--border);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+        <span style="color:var(--g); font-weight:700; font-size:0.95rem;">⚡ FieldKit CLI &amp; Python 3.9+ Engine</span>
+        <span class="spec-chip">Package: fieldkit-sdk v1.0.0</span>
+      </div>
+      <p style="color:var(--fg-muted); margin-bottom:16px; font-size:0.9rem;">
+        Run deterministic missions directly from your terminal or integrate the state machine, raycasting evaluator, and voice gate into your own edge application.
+      </p>
+      <div style="background:rgba(0,0,0,0.6); padding:16px; border-radius:6px; border:1px solid var(--border-subtle); font-family:var(--mono); font-size:0.82rem; overflow-x:auto;">
+        <pre style="color:var(--green); margin:0;"><code># Install SDK & CLI directly
+pip install -e sdk/python/
+
+# Run an interactive physical mission
+fieldkit run templates/industrial-repair/mission.yaml
+
+# Test 3D skeletal hand raycast geometry
+fieldkit test-raycast
+
+# Verify on-device hardware enclave privacy vault
+fieldkit vault-audit</code></pre>
+      </div>
+      <p style="margin-top:14px;">
+        <a href="https://github.com/NullAITech/fieldkit/tree/main/sdk/python" target="_blank" rel="noopener noreferrer" style="color:var(--g); font-size:0.88rem; text-decoration:none;">
+          View Python SDK Documentation &amp; Reference Architecture →
+        </a>
+      </p>
     </div>
 
     <!-- Official FieldKit MCP Server Section -->
