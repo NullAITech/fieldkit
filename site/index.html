@@ -124,6 +124,9 @@
       <a href="https://github.com/NullAITech/fieldkit" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
         Read Specification on GitHub →
       </a>
+      <a href="#architecture" class="btn btn-secondary">
+        Architecture Pipeline
+      </a>
       <a href="#workbench" class="btn btn-secondary">
         Interactive Workbench
       </a>
@@ -172,30 +175,108 @@
       </div>
     </div>
 
-    <div class="diagram-wrap">
-      <pre>
-┌────────────────────────────────────────────────────────────────────────┐
-│                                FIELDKIT                                │
-│               Real-World Edge AI Operating Specification               │
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    │
-      ┌─────────────────────────────┼─────────────────────────────┐
-      ▼                             ▼                             ▼
-┌───────────────────┐    ┌───────────────────────┐    ┌───────────────────┐
-│   PHYSICAL FOV    │    │  TEMPORAL GROUNDING   │    │  WEARER PRIVACY   │
-│  Camera / Audio   │    │  Sub-127ms Tracking   │    │  On-Device Vault  │
-│  Sensors (Glasses │    │  State Transitions    │    │  Voice Isolation  │
-│  Bodycam, Drone)  │    │  Skeletal Overlays    │    │  AES-256 at Rest  │
-└─────────┬─────────┘    └──────────┬────────────┘    └─────────┬─────────┘
-          │                         │                           │
-          └─────────────────────────┼───────────────────────────┘
-                                    │
-                                    ▼
-                 ┌──────────────────────────────────────┐
-                 │        PROACTIVE ANTICIPATION        │
-                 │   Speaks next step before you ask    │
-                 └──────────────────────────────────────┘
-      </pre>
+    <!-- Architectural Pipeline Flow Visualizer -->
+    <div id="architecture" class="arch-flow-wrap">
+      <div class="arch-header">
+        <div class="arch-title-group">
+          <h3>FieldKit Real-World Operating Architecture</h3>
+          <p>Deterministic data flow between edge multimodal ingest, spatial grounding, on-device biometric security, and proactive voice dispatch.</p>
+        </div>
+        <span class="spec-chip">RFC 2024-11 · OPEN STANDARD</span>
+      </div>
+
+      <!-- Tier 1: Sensory Ingest -->
+      <div class="flow-tier center">
+        <div class="flow-node" style="max-width:580px; width:100%;">
+          <div class="flow-node-top">
+            <div class="flow-node-title">
+              <span>👁️</span> 01. WEARABLE SENSORY INGEST
+            </div>
+            <span class="flow-badge-live gold">STREAMING · 30 FPS</span>
+          </div>
+          <p class="flow-node-desc">
+            Raw camera frames, binaural audio streams, and 9-DoF IMU kinematics captured from smart glasses (Ray-Ban Meta, Android wearables), chest cams, or drones with real-time motion-stabilized ROI cropping.
+          </p>
+          <div class="flow-metric-row">
+            <span class="flow-chip">1080p60 H.265</span>
+            <span class="flow-chip">14.2 Mbps Bitrate</span>
+            <span class="flow-chip">&lt;127ms Frame Budget</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bus Connector -->
+      <div class="flow-bus" aria-hidden="true">
+        <svg viewBox="0 0 100 38" preserveAspectRatio="none">
+          <line x1="50" y1="0" x2="50" y2="38" class="bus-line"></line>
+        </svg>
+      </div>
+
+      <!-- Tier 2: Split Parallel Engines -->
+      <div class="flow-tier split">
+        <div class="flow-node">
+          <div class="flow-node-top">
+            <div class="flow-node-title">
+              <span>📐</span> 02. TEMPORAL GROUNDING ENGINE
+            </div>
+            <span class="flow-badge-live cyan">TSM VALIDATED</span>
+          </div>
+          <p class="flow-node-desc">
+            21-point skeletal hand landmark raycasting against 3D volumetric targets. Evaluates pinch gestures, contact duration, and tool alignment against the deterministic mission DAG.
+          </p>
+          <div class="flow-metric-row">
+            <span class="flow-chip">21-Pt Skeletal Mesh</span>
+            <span class="flow-chip">38ms Edge Inference</span>
+            <span class="flow-chip">Zero-Skip Interlock</span>
+          </div>
+        </div>
+
+        <div class="flow-node">
+          <div class="flow-node-top">
+            <div class="flow-node-title">
+              <span>🛡️</span> 03. SOVEREIGN BIOMETRIC VAULT
+            </div>
+            <span class="flow-badge-live green">ENCLAVE SECURE</span>
+          </div>
+          <p class="flow-node-desc">
+            Hardware-backed encryption enclave. Spectral near-field voice gating isolates wearer audio against ambient machinery noise. Zero unconfirmed cloud streaming of raw video or voiceprints.
+          </p>
+          <div class="flow-metric-row">
+            <span class="flow-chip">AES-256-GCM</span>
+            <span class="flow-chip">16-Band Speech Gate</span>
+            <span class="flow-chip">Local-First Enclave</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bus Connector -->
+      <div class="flow-bus" aria-hidden="true">
+        <svg viewBox="0 0 100 38" preserveAspectRatio="none">
+          <line x1="25" y1="0" x2="50" y2="38" class="bus-line cyan"></line>
+          <line x1="75" y1="0" x2="50" y2="38" class="bus-line"></line>
+        </svg>
+      </div>
+
+      <!-- Tier 3: Proactive Coach -->
+      <div class="flow-tier center">
+        <div class="flow-node" style="max-width:580px; width:100%;">
+          <div class="flow-node-top">
+            <div class="flow-node-title">
+              <span>⚡</span> 04. PROACTIVE ANTICIPATION ENGINE
+            </div>
+            <span class="flow-badge-live gold">DISPATCH READY</span>
+          </div>
+          <p class="flow-node-desc">
+            Synthesizes step completion from spatial grounding and speaks the next physical directive through bone-conduction audio before the operator has to ask. Hands-free operational autonomy.
+          </p>
+          <div class="flow-metric-row">
+            <span class="flow-chip">Neural Edge TTS</span>
+            <span class="flow-chip">Hands-Free Audio Directives</span>
+            <span class="flow-chip">Proactive DAG Transition</span>
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 

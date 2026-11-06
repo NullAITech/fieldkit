@@ -441,7 +441,7 @@ h2, h3 {
 #fieldkitCanvas {
   display: block;
   width: 100%;
-  height: 280px;
+  height: 380px;
   cursor: crosshair;
 }
 
@@ -587,28 +587,178 @@ h2, h3 {
   color: #fff;
 }
 
-/* Architecture ASCII Banner */
-.diagram-wrap {
-  max-width: 900px;
+/* Architectural Pipeline Flow Visualizer */
+.arch-flow-wrap {
+  max-width: 920px;
   width: 100%;
   margin: 0 auto 60px;
-  background: rgba(10, 13, 20, 0.85);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 24px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  background: rgba(10, 14, 22, 0.94);
+  border: 1px solid var(--border-bright);
+  border-radius: 12px;
+  padding: 28px 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7), 0 0 24px rgba(245, 184, 46, 0.06);
 }
 
-.diagram-wrap pre {
+.arch-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.arch-title-group h3 {
+  font-size: 1.15rem;
+  color: #fff;
+  font-family: var(--display);
+  margin-bottom: 4px;
+}
+
+.arch-title-group p {
+  font-size: 0.82rem;
+  color: var(--fg-muted);
+}
+
+.flow-tier {
+  width: 100%;
+  position: relative;
+}
+
+.flow-tier.center {
+  display: flex;
+  justify-content: center;
+}
+
+.flow-tier.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.flow-node {
+  background: rgba(4, 7, 12, 0.85);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 18px 20px;
+  position: relative;
+  transition: all 0.25s ease;
+  cursor: default;
+}
+
+.flow-node:hover {
+  border-color: var(--border-bright);
+  background: rgba(14, 20, 32, 0.95);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 14px rgba(245, 184, 46, 0.1);
+}
+
+.flow-node.highlight {
+  border-color: var(--g);
+  box-shadow: 0 0 20px rgba(245, 184, 46, 0.25);
+}
+
+.flow-node-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.flow-node-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #fff;
+  font-family: var(--display);
+}
+
+.flow-badge-live {
+  font-size: 0.68rem;
+  font-family: var(--mono);
+  padding: 2px 7px;
+  border-radius: 3px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.flow-badge-live.gold {
   color: var(--g);
-  font-size: 0.85rem;
-  line-height: 1.35;
-  text-align: left;
-  white-space: pre;
-  display: inline-block;
-  min-width: 100%;
+  background: rgba(245, 184, 46, 0.12);
+  border: 1px solid rgba(245, 184, 46, 0.3);
+}
+
+.flow-badge-live.cyan {
+  color: var(--cyan);
+  background: rgba(77, 232, 255, 0.12);
+  border: 1px solid rgba(77, 232, 255, 0.3);
+}
+
+.flow-badge-live.green {
+  color: var(--green);
+  background: rgba(78, 255, 155, 0.12);
+  border: 1px solid rgba(78, 255, 155, 0.3);
+}
+
+.flow-node-desc {
+  font-size: 0.82rem;
+  color: var(--fg-muted);
+  line-height: 1.55;
+  margin-bottom: 12px;
+}
+
+.flow-metric-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.flow-chip {
+  font-size: 0.70rem;
+  font-family: var(--mono);
+  color: var(--fg);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 2px 7px;
+  border-radius: 3px;
+}
+
+/* Animated Flow Bus Connectors */
+.flow-bus {
+  height: 38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.flow-bus svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.bus-line {
+  stroke: rgba(245, 184, 46, 0.3);
+  stroke-width: 2;
+  stroke-dasharray: 6 4;
+  animation: bus-dash 2s linear infinite;
+}
+
+.bus-line.cyan {
+  stroke: rgba(77, 232, 255, 0.3);
+}
+
+@keyframes bus-dash {
+  to { stroke-dashoffset: -20; }
 }
 
 /* Content Container */
@@ -911,6 +1061,9 @@ footer a:hover {
 
 /* Triple Viewport Responsiveness */
 @media (max-width: 960px) {
+  .flow-tier.split {
+    grid-template-columns: 1fr;
+  }
   .wb-panel {
     grid-template-columns: 1fr;
   }
@@ -970,7 +1123,10 @@ footer a:hover {
     white-space: nowrap;
   }
   #fieldkitCanvas {
-    height: 200px;
+    height: 260px;
+  }
+  .arch-flow-wrap {
+    padding: 16px 12px;
   }
   .hud-wrapper {
     padding: 10px;

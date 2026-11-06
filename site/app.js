@@ -1,5 +1,5 @@
 // FieldKit Physical AI Runtime & Uncommon Web Interactive Simulation
-// Inspired by webdev.teknium.io — Bayer Dithering, Braille Tracking, WebAudio & Mission State Engine
+// High-End 21-Joint Skeletal Hand Kinematics, Volumetric Raycast HUD & Architectural Flow Engine
 (() => {
   'use strict';
 
@@ -69,7 +69,7 @@
   }
 
   // --- DYNAMIC SPOTLIGHT TRACKER ON BENTO CARDS ---
-  document.querySelectorAll('.bento-card, .workbench-box, .hud-wrapper').forEach(card => {
+  document.querySelectorAll('.bento-card, .workbench-box, .hud-wrapper, .arch-flow-wrap').forEach(card => {
     card.addEventListener('pointermove', e => {
       const rect = card.getBoundingClientRect();
       const x = e.clientX - rect.left;
@@ -89,12 +89,11 @@
     function resizeCanvas() {
       const parent = canvas.parentElement;
       width = canvas.width = parent ? parent.clientWidth : 880;
-      height = canvas.height = window.innerWidth <= 640 ? 200 : 280;
+      height = canvas.height = window.innerWidth <= 640 ? 260 : 380;
     }
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    // Bayer 4x4 matrix for retro dither shading
     const BAYER_4X4 = [
       [ 0/16,  8/16,  2/16, 10/16],
       [12/16,  4/16, 14/16,  6/16],
@@ -107,36 +106,36 @@
         id: 'LOTO-480V-BREAKER',
         name: '480V BREAKER #04',
         type: 'ELECTRICAL_ISOLATION',
-        hint: 'Align thumb & index to verify padlock shackle locked',
-        rx: 0.52, ry: 0.44, rw: 130, rh: 80
+        hint: 'Align index raycast with padlock shackle to verify lock engagement',
+        rx: 0.55, ry: 0.45, rw: 170, rh: 120
       },
       pump: {
         id: 'PUMP-HOUSING-MANIFOLD',
         name: 'CENTRIFUGAL CASING',
         type: 'MECHANICAL_SEAL',
         hint: 'Verify zero psi differential before bolt extraction',
-        rx: 0.46, ry: 0.46, rw: 150, rh: 95
+        rx: 0.52, ry: 0.46, rw: 180, rh: 130
       },
       tccc: {
         id: 'TCCC-CAT-TOURNIQUET',
         name: 'FEMORAL ARTERY SITE',
         type: 'HEMORRHAGE_CONTROL',
         hint: 'Pinch windlass rod and lock into C-clip',
-        rx: 0.50, ry: 0.48, rw: 140, rh: 85
+        rx: 0.54, ry: 0.48, rw: 175, rh: 125
       },
       tamper: {
         id: 'RACK-TAMPER-SEAL-R04',
         name: 'SECURITY VOID SEAL',
         type: 'PHYSICAL_TAMPER',
         hint: 'Trace holographic edge for micro-fractures',
-        rx: 0.48, ry: 0.45, rw: 135, rh: 75
+        rx: 0.52, ry: 0.46, rw: 170, rh: 115
       }
     };
 
     let currentTargetKey = 'loto';
     let currentSensorMode = 'bayer'; // 'bayer' | 'sobel' | 'depth' | 'thermal'
-    let mouseX = 0.3;
-    let mouseY = 0.6;
+    let mouseX = 0.28;
+    let mouseY = 0.65;
     let isHoveringCanvas = false;
 
     // Target buttons
@@ -189,9 +188,427 @@
     // Braille glyph generator
     const BRAILLE_CHARS = ['⠋','⠙','⠹','⠸','⠼','⠴','⠦','⠧','⠇','⠏'];
     let brailleIdx = 0;
-
     let t = 0;
     let verifiedCooldown = 0;
+
+    // --- TARGET SCHEMATIC VECTOR RENDERING ROUTINES ---
+    function drawLotoSchematic(ctx, x, y, w, h, t, inTarget) {
+      // 480V Breaker Enclosure Box
+      const pColor = inTarget ? '#4eff9b' : '#f5b82e';
+      
+      // Outer steel cabinet
+      ctx.fillStyle = 'rgba(20, 24, 32, 0.85)';
+      ctx.fillRect(x + 10, y + 10, w - 20, h - 20);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(x + 10, y + 10, w - 20, h - 20);
+
+      // Warning Chevron Tape on top
+      const chevronH = 12;
+      ctx.fillStyle = '#f5b82e';
+      ctx.fillRect(x + 14, y + 14, w - 28, chevronH);
+      ctx.fillStyle = '#0a0d14';
+      for (let cx = x + 18; cx < x + w - 30; cx += 14) {
+        ctx.beginPath();
+        ctx.moveTo(cx, y + 14);
+        ctx.lineTo(cx + 6, y + 14);
+        ctx.lineTo(cx + 1, y + 14 + chevronH);
+        ctx.lineTo(cx - 5, y + 14 + chevronH);
+        ctx.fill();
+      }
+
+      // Heavy industrial breaker toggle (OFF position - downward)
+      const switchCenterX = x + w * 0.35;
+      const switchCenterY = y + h * 0.58;
+      ctx.fillStyle = '#111620';
+      ctx.fillRect(switchCenterX - 14, switchCenterY - 24, 28, 48);
+      ctx.strokeStyle = pColor;
+      ctx.lineWidth = 1.2;
+      ctx.strokeRect(switchCenterX - 14, switchCenterY - 24, 28, 48);
+
+      // Red switch handle
+      ctx.fillStyle = '#ff4444';
+      ctx.fillRect(switchCenterX - 10, switchCenterY + 2, 20, 18);
+      ctx.fillStyle = '#fff';
+      ctx.font = '7px "JetBrains Mono", monospace';
+      ctx.fillText('OFF', switchCenterX - 7, switchCenterY + 14);
+
+      // Master Padlock through Hasp
+      const lockX = switchCenterX + 16;
+      const lockY = switchCenterY + 10;
+      // Steel shackle
+      ctx.strokeStyle = inTarget ? '#4eff9b' : '#cbd5e1';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.arc(lockX, lockY - 8, 7, Math.PI, 0, false);
+      ctx.lineTo(lockX + 7, lockY);
+      ctx.stroke();
+
+      // Brass padlock body
+      ctx.fillStyle = '#d4af37';
+      ctx.fillRect(lockX - 9, lockY, 18, 16);
+      ctx.strokeStyle = '#b8860b';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(lockX - 9, lockY, 18, 16);
+
+      // LOTO Danger Tag hanging from shackle
+      const tagX = lockX + 16;
+      const tagY = lockY + 2;
+      ctx.fillStyle = '#e2e8f0';
+      ctx.fillRect(tagX, tagY, 28, 38);
+      ctx.fillStyle = '#ef4444';
+      ctx.fillRect(tagX, tagY, 28, 10);
+      ctx.fillStyle = '#fff';
+      ctx.font = '6px "JetBrains Mono", monospace';
+      ctx.fillText('DANGER', tagX + 2, tagY + 7);
+      ctx.fillStyle = '#0f172a';
+      ctx.font = '5px "JetBrains Mono", monospace';
+      ctx.fillText('TAG #4092', tagX + 2, tagY + 17);
+      // Barcode lines
+      for (let bx = tagX + 3; bx < tagX + 25; bx += 3) {
+        ctx.fillRect(bx, tagY + 22, (bx % 2 === 0 ? 1.5 : 1), 10);
+      }
+
+      // Voltmeter zero indicator
+      ctx.fillStyle = inTarget ? '#4eff9b' : '#38bdf8';
+      ctx.beginPath();
+      ctx.arc(x + w * 0.78, y + h * 0.32, 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.font = '8px "JetBrains Mono", monospace';
+      ctx.fillText('0.0V ISOLATED', x + w * 0.62, y + h * 0.44);
+    }
+
+    function drawPumpSchematic(ctx, x, y, w, h, t, inTarget) {
+      const pColor = inTarget ? '#4eff9b' : '#f5b82e';
+      const cx = x + w * 0.45;
+      const cy = y + h * 0.52;
+
+      // Volute casing outer spiral
+      ctx.strokeStyle = pColor;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 38, 0.2 * Math.PI, 1.8 * Math.PI);
+      ctx.lineTo(cx + 48, cy - 38);
+      ctx.lineTo(cx + 48, cy - 18);
+      ctx.stroke();
+
+      // Fluid flow arrows
+      ctx.strokeStyle = 'rgba(77, 232, 255, 0.4)';
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.arc(cx, cy, 26, 0, Math.PI * 1.5);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Impeller center hub
+      ctx.fillStyle = '#334155';
+      ctx.beginPath();
+      ctx.arc(cx, cy, 14, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = pColor;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Impeller curved vanes
+      const vaneCount = 6;
+      for (let i = 0; i < vaneCount; i++) {
+        const angle = (i * Math.PI * 2 / vaneCount) + (t * 0.8);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(cx + Math.cos(angle) * 6, cy + Math.sin(angle) * 6);
+        ctx.quadraticCurveTo(
+          cx + Math.cos(angle + 0.4) * 20, cy + Math.sin(angle + 0.4) * 20,
+          cx + Math.cos(angle) * 28, cy + Math.sin(angle) * 28
+        );
+        ctx.stroke();
+      }
+
+      // Flange Bolt circles (Numbered Star Pattern)
+      for (let b = 0; b < 6; b++) {
+        const bAngle = (b * Math.PI * 2 / 6);
+        const bx = cx + Math.cos(bAngle) * 44;
+        const by = cy + Math.sin(bAngle) * 44;
+        ctx.fillStyle = '#64748b';
+        ctx.beginPath();
+        ctx.arc(bx, by, 3.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
+      }
+
+      // Pressure gauge dial on top
+      const gx = x + w * 0.78;
+      const gy = y + h * 0.32;
+      ctx.fillStyle = '#0f172a';
+      ctx.beginPath();
+      ctx.arc(gx, gy, 16, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#94a3b8';
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+
+      // Needle at zero
+      ctx.strokeStyle = '#ef4444';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(gx, gy);
+      ctx.lineTo(gx - 10, gy + 4);
+      ctx.stroke();
+      ctx.fillStyle = '#fff';
+      ctx.font = '7px "JetBrains Mono", monospace';
+      ctx.fillText('0.0 PSI', gx - 14, gy + 24);
+    }
+
+    function drawTcccSchematic(ctx, x, y, w, h, t, inTarget) {
+      const pColor = inTarget ? '#4eff9b' : '#f5b82e';
+      const cx = x + w * 0.48;
+      const cy = y + h * 0.50;
+
+      // Arm/Leg limb contour with tactical OD fabric pattern
+      ctx.fillStyle = 'rgba(28, 38, 28, 0.7)';
+      ctx.beginPath();
+      ctx.roundRect(cx - 55, cy - 36, 110, 72, 12);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(100, 130, 100, 0.3)';
+      ctx.stroke();
+
+      // Tourniquet black nylon webbing strap (1.5" band)
+      ctx.fillStyle = '#09090b';
+      ctx.fillRect(cx - 20, cy - 36, 40, 72);
+      ctx.strokeStyle = '#3f3f46';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(cx - 20, cy - 36, 40, 72);
+
+      // Red Pull Tab Tip
+      ctx.fillStyle = '#ef4444';
+      ctx.fillRect(cx + 12, cy - 36, 8, 72);
+
+      // Routing Buckle Plate
+      ctx.fillStyle = '#27272a';
+      ctx.fillRect(cx - 14, cy - 20, 28, 40);
+      ctx.strokeStyle = pColor;
+      ctx.lineWidth = 1.2;
+      ctx.strokeRect(cx - 14, cy - 20, 28, 40);
+
+      // Windlass polymer rod angled across plate
+      ctx.strokeStyle = '#e4e4e7';
+      ctx.lineWidth = 5;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(cx - 28, cy + 18);
+      ctx.lineTo(cx + 28, cy - 18);
+      ctx.stroke();
+      ctx.lineCap = 'butt';
+
+      // White Time Strap with time written
+      ctx.fillStyle = '#f8fafc';
+      ctx.fillRect(cx - 16, cy + 22, 32, 12);
+      ctx.fillStyle = '#09090b';
+      ctx.font = '6px "JetBrains Mono", monospace';
+      ctx.fillText('TIME: 08:42', cx - 14, cy + 30);
+
+      // Occlusion status
+      ctx.fillStyle = inTarget ? '#4eff9b' : '#ef4444';
+      ctx.font = '8px "JetBrains Mono", monospace';
+      ctx.fillText(inTarget ? 'PULSE: ARRESTED' : 'HEMORRHAGE DETECTED', x + 16, y + h - 14);
+    }
+
+    function drawTamperSchematic(ctx, x, y, w, h, t, inTarget) {
+      const pColor = inTarget ? '#4eff9b' : '#f5b82e';
+      const cx = x + w * 0.5;
+      const cy = y + h * 0.5;
+
+      // 1U Server Chassis edge
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+      ctx.fillRect(x + 10, y + 15, w - 20, h - 30);
+      ctx.strokeStyle = '#334155';
+      ctx.strokeRect(x + 10, y + 15, w - 20, h - 30);
+
+      // Captive thumbscrew
+      ctx.fillStyle = '#64748b';
+      ctx.beginPath();
+      ctx.arc(x + 26, cy, 9, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#94a3b8';
+      ctx.stroke();
+
+      // Holographic Anti-Tamper Tape across seam
+      const tapeX = x + 44;
+      const tapeY = cy - 22;
+      const tapeW = w - 65;
+      const tapeH = 44;
+
+      // Foil gradient shimmer
+      const foilGrad = ctx.createLinearGradient(tapeX, tapeY, tapeX + tapeW, tapeY + tapeH);
+      foilGrad.addColorStop(0, 'rgba(212, 175, 55, 0.4)');
+      foilGrad.addColorStop(0.3, 'rgba(77, 232, 255, 0.5)');
+      foilGrad.addColorStop(0.7, 'rgba(245, 184, 46, 0.6)');
+      foilGrad.addColorStop(1, 'rgba(78, 255, 155, 0.4)');
+      ctx.fillStyle = foilGrad;
+      ctx.fillRect(tapeX, tapeY, tapeW, tapeH);
+      ctx.strokeStyle = pColor;
+      ctx.lineWidth = 1;
+      ctx.strokeRect(tapeX, tapeY, tapeW, tapeH);
+
+      // Honeycomb micro-pattern
+      ctx.strokeStyle = 'rgba(0,0,0,0.25)';
+      for (let hx = tapeX + 4; hx < tapeX + tapeW; hx += 10) {
+        ctx.beginPath();
+        ctx.arc(hx, cy, 3, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      // Tamper break slit line
+      ctx.strokeStyle = inTarget ? '#4eff9b' : '#ef4444';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(tapeX + tapeW * 0.48, tapeY);
+      ctx.lineTo(tapeX + tapeW * 0.48, tapeY + tapeH);
+      ctx.stroke();
+
+      // Serial & Void Text
+      ctx.fillStyle = '#0f172a';
+      ctx.font = '7px "JetBrains Mono", monospace';
+      ctx.fillText('VOID IF SEAL BROKEN', tapeX + 4, tapeY + 12);
+      ctx.font = '6px "JetBrains Mono", monospace';
+      ctx.fillText('SN-88219-RACK04', tapeX + 4, tapeY + tapeH - 8);
+    }
+
+    // --- ARTICULATED 21-JOINT SKELETAL HAND KINEMATIC SOLVER ---
+    function render21JointHand(ctx, handX, handY, targetX, targetY, inTarget, t, color) {
+      // Natural pinch parameter (0 = open hand, 1 = thumb & index touch)
+      const pinchAmount = inTarget ? 0.98 : (Math.sin(t * 3.2) + 1) * 0.35;
+
+      // Wrist base (Point 0)
+      const wristX = handX - 25;
+      const wristY = handY + 65;
+
+      // Hand orientation towards target
+      const angle = Math.atan2(targetY - handY, targetX - handX);
+      const perpAngle = angle + Math.PI / 2;
+
+      // Metacarpal Bases (Knuckles)
+      // Thumb CMC (1), Index MCP (5), Middle MCP (9), Ring MCP (13), Pinky MCP (17)
+      const p = [];
+
+      p[0] = { x: wristX, y: wristY }; // Wrist
+
+      // Palm joints
+      p[1] = { x: wristX - 18, y: wristY - 26 }; // Thumb CMC
+      p[5] = { x: wristX - 8, y: wristY - 48 };  // Index MCP
+      p[9] = { x: wristX + 6, y: wristY - 50 };  // Middle MCP
+      p[13] = { x: wristX + 18, y: wristY - 45 };// Ring MCP
+      p[17] = { x: wristX + 28, y: wristY - 38 };// Pinky MCP
+
+      // Thumb chain (1 -> 2 -> 3 -> 4)
+      p[2] = { x: p[1].x - 10, y: p[1].y - 14 };
+      p[3] = { x: p[2].x + 4, y: p[2].y - 12 };
+      // Thumb Tip (4) moves towards Index Tip when pinching
+      const thumbRestX = p[3].x + 12;
+      const thumbRestY = p[3].y - 10;
+      p[4] = {
+        x: thumbRestX + (handX - thumbRestX) * pinchAmount,
+        y: thumbRestY + (handY - thumbRestY) * pinchAmount
+      };
+
+      // Index chain (5 -> 6 -> 7 -> 8)
+      p[6] = { x: p[5].x - 4, y: p[5].y - 18 };
+      p[7] = { x: p[6].x + 2, y: p[6].y - 16 };
+      // Index Tip (8) meets Thumb Tip at contact center
+      const indexRestX = p[7].x + 4;
+      const indexRestY = p[7].y - 14;
+      p[8] = {
+        x: indexRestX + (handX - indexRestX) * pinchAmount,
+        y: indexRestY + (handY - indexRestY) * pinchAmount
+      };
+
+      // Middle chain (9 -> 10 -> 11 -> 12)
+      p[10] = { x: p[9].x + 2, y: p[9].y - 20 };
+      p[11] = { x: p[10].x + 3, y: p[10].y - 18 };
+      p[12] = { x: p[11].x + 2, y: p[11].y - 14 };
+
+      // Ring chain (13 -> 14 -> 15 -> 16)
+      p[14] = { x: p[13].x + 4, y: p[13].y - 18 };
+      p[15] = { x: p[14].x + 4, y: p[14].y - 16 };
+      p[16] = { x: p[15].x + 3, y: p[15].y - 12 };
+
+      // Pinky chain (17 -> 18 -> 19 -> 20)
+      p[18] = { x: p[17].x + 6, y: p[17].y - 16 };
+      p[19] = { x: p[18].x + 5, y: p[18].y - 14 };
+      p[20] = { x: p[19].x + 4, y: p[19].y - 10 };
+
+      // Bone Segments
+      const bones = [
+        // Palm lattice
+        [0, 1], [0, 5], [5, 9], [9, 13], [13, 17], [0, 17],
+        // Thumb
+        [1, 2], [2, 3], [3, 4],
+        // Index
+        [5, 6], [6, 7], [7, 8],
+        // Middle
+        [9, 10], [10, 11], [11, 12],
+        // Ring
+        [13, 14], [14, 15], [15, 16],
+        // Pinky
+        [17, 18], [18, 19], [19, 20]
+      ];
+
+      // Draw bones
+      ctx.lineWidth = 1.8;
+      bones.forEach(([i, j]) => {
+        const boneGrad = ctx.createLinearGradient(p[i].x, p[i].y, p[j].x, p[j].y);
+        boneGrad.addColorStop(0, inTarget ? 'rgba(78, 255, 155, 0.7)' : 'rgba(77, 232, 255, 0.6)');
+        boneGrad.addColorStop(1, inTarget ? 'rgba(78, 255, 155, 0.9)' : 'rgba(77, 232, 255, 0.8)');
+        ctx.strokeStyle = boneGrad;
+        ctx.beginPath();
+        ctx.moveTo(p[i].x, p[i].y);
+        ctx.lineTo(p[j].x, p[j].y);
+        ctx.stroke();
+      });
+
+      // Draw all 21 Joint Landmark Nodes
+      for (let k = 0; k < 21; k++) {
+        const pt = p[k];
+        // Outer halo
+        ctx.fillStyle = inTarget ? 'rgba(78, 255, 155, 0.3)' : 'rgba(77, 232, 255, 0.25)';
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, (k === 4 || k === 8 ? 5.5 : 4), 0, Math.PI * 2);
+        ctx.fill();
+
+        // Inner glowing core
+        ctx.fillStyle = inTarget ? '#ffffff' : (k === 4 || k === 8 ? '#f5b82e' : '#4de8ff');
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, (k === 4 || k === 8 ? 2.8 : 2), 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Volumetric Laser Raycast from Index Tip (p[8]) to Target
+      ctx.strokeStyle = inTarget ? 'rgba(78, 255, 155, 0.9)' : 'rgba(77, 232, 255, 0.55)';
+      ctx.lineWidth = inTarget ? 2 : 1.2;
+      ctx.setLineDash([5, 4]);
+      ctx.beginPath();
+      ctx.moveTo(p[8].x, p[8].y);
+      ctx.lineTo(targetX, targetY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Pinch Contact Arc / Electric Spark when pinched
+      if (pinchAmount > 0.85) {
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(p[8].x, p[8].y, 8 + Math.sin(t * 12) * 2, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.fillStyle = inTarget ? '#4eff9b' : '#38bdf8';
+        ctx.font = '8px "JetBrains Mono", monospace';
+        ctx.fillText('PINCH LOCK', p[8].x - 22, p[8].y - 12);
+      }
+
+      return { thumbTip: p[4], indexTip: p[8] };
+    }
 
     function renderCanvas() {
       t += 0.03;
@@ -216,7 +633,7 @@
       // Sensor-specific raster rendering
       if (currentSensorMode === 'bayer') {
         // Bayer 4x4 dither mesh
-        ctx.fillStyle = 'rgba(245, 184, 46, 0.03)';
+        ctx.fillStyle = 'rgba(245, 184, 46, 0.035)';
         for (let y = 0; y < height; y += 8) {
           for (let x = 0; x < width; x += 8) {
             const b = BAYER_4X4[(y/8)%4][(x/8)%4];
@@ -225,10 +642,10 @@
         }
       } else if (currentSensorMode === 'sobel') {
         // Sobel edge vector scanlines
-        ctx.strokeStyle = 'rgba(78, 255, 155, 0.08)';
+        ctx.strokeStyle = 'rgba(78, 255, 155, 0.09)';
         ctx.lineWidth = 1;
         for (let y = 0; y < height; y += 6) {
-          if (Math.sin(y * 0.1 + t) > 0.3) {
+          if (Math.sin(y * 0.1 + t) > 0.25) {
             ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke();
           }
         }
@@ -245,17 +662,17 @@
         }
       } else if (currentSensorMode === 'thermal') {
         // Thermal heat blob around target
-        const heatX = width * 0.5;
+        const heatX = width * 0.55;
         const heatY = height * 0.45;
-        const radGrad = ctx.createRadialGradient(heatX, heatY, 10, heatX, heatY, 160);
-        radGrad.addColorStop(0, 'rgba(255, 200, 72, 0.25)');
-        radGrad.addColorStop(0.5, 'rgba(255, 75, 45, 0.15)');
+        const radGrad = ctx.createRadialGradient(heatX, heatY, 15, heatX, heatY, 190);
+        radGrad.addColorStop(0, 'rgba(255, 200, 72, 0.28)');
+        radGrad.addColorStop(0.5, 'rgba(255, 75, 45, 0.16)');
         radGrad.addColorStop(1, 'transparent');
         ctx.fillStyle = radGrad;
         ctx.fillRect(0, 0, width, height);
       }
 
-      // First-person FOV ambient grid
+      // First-person FOV ambient grid & artificial horizon
       ctx.strokeStyle = currentSensorMode === 'sobel' 
         ? 'rgba(78, 255, 155, 0.06)' 
         : 'rgba(77, 232, 255, 0.05)';
@@ -270,23 +687,51 @@
 
       // Target geometry
       const tgt = TARGETS[currentTargetKey];
-      const targetW = Math.min(tgt.rw, width * 0.4);
-      const targetH = Math.min(tgt.rh, height * 0.45);
-      const targetX = width * tgt.rx + Math.sin(t * 0.6) * (width * 0.02);
-      const targetY = height * tgt.ry + Math.cos(t * 0.6) * (height * 0.02);
+      const targetW = Math.min(tgt.rw, width * 0.42);
+      const targetH = Math.min(tgt.rh, height * 0.48);
+      const targetX = width * tgt.rx + Math.sin(t * 0.6) * (width * 0.015);
+      const targetY = height * tgt.ry + Math.cos(t * 0.6) * (height * 0.015);
 
       const boxLeft = targetX - targetW / 2;
       const boxTop = targetY - targetH / 2;
 
       // Primary Target Bounding Box
       const targetColor = currentSensorMode === 'sobel' ? '#4eff9b' : (currentSensorMode === 'thermal' ? '#ff7e36' : '#f5b82e');
-      ctx.strokeStyle = targetColor;
-      ctx.lineWidth = 1.5;
+
+      // Operator Skeletal Hand Position
+      let operatorHandX, operatorHandY;
+      if (isHoveringCanvas) {
+        operatorHandX = width * mouseX;
+        operatorHandY = height * mouseY;
+      } else {
+        operatorHandX = width * (0.32 + Math.sin(t * 0.8) * 0.20);
+        operatorHandY = height * (0.50 + Math.cos(t * 0.8) * 0.16);
+      }
+
+      // Check raycast intersection
+      const inTarget = (
+        operatorHandX >= boxLeft && operatorHandX <= boxLeft + targetW &&
+        operatorHandY >= boxTop && operatorHandY <= boxTop + targetH
+      );
+
+      // Render Detailed Physical Target Schematic
+      if (currentTargetKey === 'loto') {
+        drawLotoSchematic(ctx, boxLeft, boxTop, targetW, targetH, t, inTarget);
+      } else if (currentTargetKey === 'pump') {
+        drawPumpSchematic(ctx, boxLeft, boxTop, targetW, targetH, t, inTarget);
+      } else if (currentTargetKey === 'tccc') {
+        drawTcccSchematic(ctx, boxLeft, boxTop, targetW, targetH, t, inTarget);
+      } else if (currentTargetKey === 'tamper') {
+        drawTamperSchematic(ctx, boxLeft, boxTop, targetW, targetH, t, inTarget);
+      }
+
+      // Bounding box border with corner brackets
+      ctx.strokeStyle = inTarget ? '#4eff9b' : targetColor;
+      ctx.lineWidth = inTarget ? 2 : 1.5;
       ctx.strokeRect(boxLeft, boxTop, targetW, targetH);
 
-      // Corner brackets (tactile HUD look)
-      ctx.fillStyle = targetColor;
-      const c = 10;
+      const c = 12;
+      ctx.fillStyle = inTarget ? '#4eff9b' : targetColor;
       ctx.fillRect(boxLeft - 2, boxTop - 2, c, 3);
       ctx.fillRect(boxLeft - 2, boxTop - 2, 3, c);
       ctx.fillRect(boxLeft + targetW - c + 2, boxTop - 2, c, 3);
@@ -296,103 +741,74 @@
       ctx.fillRect(boxLeft + targetW - c + 2, boxTop + targetH - 1, c, 3);
       ctx.fillRect(boxLeft + targetW - 1, boxTop + targetH - c + 2, 3, c);
 
-      // Target Monospace Label
+      // Target Header Tag
       ctx.font = '10px "JetBrains Mono", monospace';
-      ctx.fillStyle = targetColor;
-      ctx.fillText(`[FOV] ${tgt.id}`, boxLeft + 6, boxTop - 7);
+      ctx.fillStyle = inTarget ? '#4eff9b' : targetColor;
+      ctx.fillText(`[FOV TARGET] ${tgt.id}`, boxLeft + 6, boxTop - 8);
 
-      // Operator Skeletal Hand Position
-      let operatorHandX, operatorHandY;
-      if (isHoveringCanvas) {
-        operatorHandX = width * mouseX;
-        operatorHandY = height * mouseY;
-      } else {
-        operatorHandX = width * (0.35 + Math.sin(t * 0.8) * 0.22);
-        operatorHandY = height * (0.48 + Math.cos(t * 0.8) * 0.18);
-      }
-
-      // Check raycast intersection
-      const inTarget = (
-        operatorHandX >= boxLeft && operatorHandX <= boxLeft + targetW &&
-        operatorHandY >= boxTop && operatorHandY <= boxTop + targetH
-      );
-
-      // Pinch dynamics
-      const pinchOsc = inTarget ? 0.95 : (Math.sin(t * 3.0) + 1) / 2;
-      const pinchDist = 12 * (1 - pinchOsc);
-
-      const thumbX = operatorHandX - pinchDist;
-      const thumbY = operatorHandY + pinchDist * 0.6;
-      const indexX = operatorHandX + pinchDist;
-      const indexY = operatorHandY - pinchDist * 0.6;
-
-      // Draw Raycast line
-      ctx.strokeStyle = inTarget ? 'rgba(78, 255, 155, 0.8)' : 'rgba(77, 232, 255, 0.4)';
-      ctx.setLineDash([4, 4]);
+      // Collimator Ring Sight on Target Center
+      ctx.strokeStyle = inTarget ? 'rgba(78, 255, 155, 0.8)' : 'rgba(245, 184, 46, 0.5)';
+      ctx.lineWidth = 1;
       ctx.beginPath();
-      ctx.moveTo(operatorHandX, operatorHandY);
-      ctx.lineTo(targetX, targetY);
+      ctx.arc(targetX, targetY, 14, 0, Math.PI * 2);
       ctx.stroke();
-      ctx.setLineDash([]);
-
-      // Draw Hand Landmarks
-      ctx.fillStyle = inTarget ? '#4eff9b' : '#4de8ff';
-      ctx.beginPath(); ctx.arc(thumbX, thumbY, 3.5, 0, Math.PI * 2); ctx.fill();
-      ctx.beginPath(); ctx.arc(indexX, indexY, 3.5, 0, Math.PI * 2); ctx.fill();
-
-      // Skeletal bone segment connecting thumb and index
-      ctx.strokeStyle = inTarget ? 'rgba(78, 255, 155, 0.7)' : 'rgba(77, 232, 255, 0.5)';
-      ctx.lineWidth = 1.5;
       ctx.beginPath();
-      ctx.moveTo(thumbX, thumbY);
-      ctx.lineTo(indexX, indexY);
+      ctx.moveTo(targetX - 20, targetY); ctx.lineTo(targetX + 20, targetY);
+      ctx.moveTo(targetX, targetY - 20); ctx.lineTo(targetX, targetY + 20);
       ctx.stroke();
 
-      // Lock Reticle Animation on Intersection
-      if (inTarget) {
-        ctx.strokeStyle = '#4eff9b';
-        ctx.lineWidth = 1.2;
-        const reticleR = 18 + Math.sin(t * 8) * 3;
-        ctx.beginPath();
-        ctx.arc(operatorHandX, operatorHandY, reticleR, 0, Math.PI * 2);
-        ctx.stroke();
+      // Render 21-Joint Articulated Hand
+      render21JointHand(ctx, operatorHandX, operatorHandY, targetX, targetY, inTarget, t, targetColor);
 
-        ctx.fillStyle = '#4eff9b';
-        ctx.font = '9px "JetBrains Mono", monospace';
-        ctx.fillText('LOCKED: 99.4%', operatorHandX + reticleR + 6, operatorHandY + 3);
-
-        if (verifiedCooldown <= 0) {
-          playConfirmChime();
-          verifiedCooldown = 40;
-        }
+      // Trigger verified sound and pulse when entering target
+      if (inTarget && verifiedCooldown <= 0) {
+        playConfirmChime();
+        verifiedCooldown = 40;
       }
       if (verifiedCooldown > 0) verifiedCooldown--;
 
+      // Top Wearer Optics Overlay (Battery, Bitrate, Lux, Pitch Ladder)
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
+      ctx.font = '9px "JetBrains Mono", monospace';
+      ctx.fillText('1080p60 HDR · 14.2 Mbps · H.265 · WEARABLE POV', width - 260, 20);
+      ctx.fillText('🔋 91% · 420 LUX · 284° WNW', 14, 20);
+
+      // Artificial Horizon Ladder on Left
+      ctx.strokeStyle = 'rgba(77, 232, 255, 0.25)';
+      ctx.lineWidth = 1;
+      const horizY = height * 0.42;
+      ctx.beginPath();
+      ctx.moveTo(14, horizY); ctx.lineTo(34, horizY);
+      ctx.moveTo(14, horizY - 24); ctx.lineTo(24, horizY - 24);
+      ctx.moveTo(14, horizY + 24); ctx.lineTo(24, horizY + 24);
+      ctx.stroke();
+      ctx.fillText('0°', 38, horizY + 3);
+
       // Live Voice Gating Spectrum Visualizer in bottom-left
-      const barCount = 12;
+      const barCount = 14;
       const startX = 14;
-      const startY = height - 32;
+      const startY = height - 36;
       for (let i = 0; i < barCount; i++) {
-        const h = Math.abs(Math.sin(t * 4 + i * 0.6) * 14) + 3;
+        const h = Math.abs(Math.sin(t * 4 + i * 0.6) * 16) + 3;
         ctx.fillStyle = inTarget ? '#4eff9b' : '#4de8ff';
         ctx.fillRect(startX + i * 5, startY - h, 3, h);
       }
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.55)';
       ctx.font = '9px "JetBrains Mono", monospace';
-      ctx.fillText('VOICE GATE ACTIVE', startX + barCount * 5 + 8, startY - 2);
+      ctx.fillText('VOICE GATE ACTIVE (-18 dB ISOLATION)', startX + barCount * 5 + 8, startY - 2);
 
-      // HUD Monospace Overlay Information
+      // Bottom Monospace HUD Status Bar
       ctx.fillStyle = inTarget ? '#4eff9b' : targetColor;
       ctx.font = '11px "JetBrains Mono", monospace';
       const statusText = inTarget 
-        ? `${BRAILLE_CHARS[brailleIdx]} 100% GROUNDED · CONTACT VERIFIED (RAYCAST LOCKED)`
-        : `${BRAILLE_CHARS[brailleIdx]} 38ms LATENCY · HANDS-BUSY TRACKING ACTIVE`;
+        ? `${BRAILLE_CHARS[brailleIdx]} 100% GROUNDED · CONTACT VERIFIED (RAYCAST LOCKED 99.4%)`
+        : `${BRAILLE_CHARS[brailleIdx]} 38ms LATENCY · 21-JOINT HAND TRACKING ACTIVE`;
       ctx.fillText(statusText, 14, height - 12);
 
       // Latency wave graph in bottom right
       const jitter = Math.round(34 + Math.sin(t * 1.5) * 5);
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-      ctx.fillText(`EDGE: ${jitter}ms · 30 FPS`, width - 155, height - 12);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
+      ctx.fillText(`EDGE COMPUTE: ${jitter}ms · 30 FPS`, width - 195, height - 12);
 
       requestAnimationFrame(renderCanvas);
     }
@@ -739,7 +1155,7 @@
   });
 
   // Audio blip on all links and interactive buttons
-  document.querySelectorAll('a, button, .wb-tab, .target-pill, .sensor-pill').forEach(el => {
+  document.querySelectorAll('a, button, .wb-tab, .target-pill, .sensor-pill, .flow-node').forEach(el => {
     el.addEventListener('pointerenter', () => {
       playBlip(1100, 0.02, 'triangle', 0.015);
     });
