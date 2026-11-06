@@ -96,9 +96,11 @@
     <span class="logo-title">FIELDKIT</span>
   </a>
   <nav aria-label="Navigation">
+    <a href="#hud" class="nav-link">Live HUD</a>
     <a href="#why" class="nav-link">Why FieldKit</a>
     <a href="#pillars" class="nav-link">Pillars</a>
     <a href="#templates" class="nav-link">Templates</a>
+    <a href="#workbench" class="nav-link">Workbench</a>
     <a href="#sdk" class="nav-link">SDK &amp; CLI</a>
     <a href="#mcp" class="nav-link">MCP Server</a>
     <a href="#contribute" class="nav-link">Contribute</a>
@@ -120,12 +122,38 @@
       <a href="https://github.com/NullAITech/fieldkit" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
         Read Specification on GitHub →
       </a>
-      <a href="#pillars" class="btn btn-secondary">
-        Explore Architecture
+      <a href="#workbench" class="btn btn-secondary">
+        Interactive Workbench
       </a>
       <a href="https://buy.stripe.com/3cIfZg27PdKo2D64Ocfw40X" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="color:var(--g)">
         ☕ Buy Us a Coffee
       </a>
+    </div>
+
+    <!-- Live Interactive Physical AI Raycast HUD -->
+    <div id="hud" class="hud-wrapper">
+      <div class="hud-topbar">
+        <div class="hud-title-group">
+          <span class="hud-live-tag">REAL-TIME FOV</span>
+          <span style="font-size:0.8rem; font-weight:700; color:#fff;">SKELETAL RAYCAST &amp; PINCH SIMULATOR</span>
+        </div>
+        <div class="hud-targets">
+          <button type="button" class="target-pill active" data-target="loto">⚡ 480V Breaker</button>
+          <button type="button" class="target-pill" data-target="pump">🔧 Pump Casing</button>
+          <button type="button" class="target-pill" data-target="tccc">🩸 Tourniquet</button>
+          <button type="button" class="target-pill" data-target="tamper">🔒 Tamper Seal</button>
+          <button type="button" id="sfxToggle" class="hud-sfx-toggle on" title="Toggle WebAudio Procedural Feedback">♫ SFX: ON</button>
+        </div>
+      </div>
+
+      <div class="canvas-container">
+        <canvas id="fieldkitCanvas" width="880" height="280" aria-label="FieldKit real-time physical AI raycast simulation canvas"></canvas>
+      </div>
+
+      <div class="hud-bottombar">
+        <div id="hudInstruction" class="hud-instruction">AIM: 480V BREAKER #04 — Align thumb &amp; index to verify padlock shackle locked</div>
+        <div style="font-family:var(--mono); color:var(--fg-muted);">MOVE MOUSE TO AIM RAYCAST · PINCH TO LOCK</div>
+      </div>
     </div>
 
     <div class="diagram-wrap">
@@ -297,6 +325,47 @@
       </div>
     </div>
 
+    <!-- Interactive Mission State Machine Workbench -->
+    <section id="workbench" class="sec-head">
+      <h2>Interactive Mission State Machine</h2>
+      <p>
+        Simulate the temporal state transitions and proactive voice guidance experienced by frontline operators wearing smart glasses or chest rigs.
+      </p>
+    </section>
+
+    <div class="workbench-box">
+      <div class="workbench-tabs">
+        <button type="button" class="wb-tab active" data-mission="industrial">⚙️ Industrial Pump Overhaul</button>
+        <button type="button" class="wb-tab" data-mission="tccc">🩸 TCCC Casualty Care</button>
+        <button type="button" class="wb-tab" data-mission="datacenter">🔒 Datacenter Tamper Sweep</button>
+      </div>
+
+      <div class="wb-panel">
+        <div class="wb-col">
+          <div class="wb-label" id="wbStepBadge">CHECKPOINT: STEP_02_PRESSURE_BLEED · GAUGE_PI_104_DIAL</div>
+          <div class="wb-step-title" id="wbStepTitle">Step 2 of 4: Bleed Suction and Discharge Manifolds</div>
+          <div class="wb-step-desc" id="wbStepDesc">
+            Ensure suction valve V-101 and discharge valve V-102 are sealed. Open the petcock bleed valve until the needle reads 0.0 PSI.
+          </div>
+          <div class="wb-voice-bubble" id="wbVoiceText">
+            PROACTIVE AUDIO: "Manifold depressurized. 0.0 PSI confirmed. Proceed to casing removal."
+          </div>
+          <div class="wb-controls">
+            <button type="button" id="wbAdvanceBtn" class="wb-btn">Advance Physical Step [SPACE] →</button>
+            <button type="button" id="wbResetBtn" class="wb-btn secondary">↺ Reset Mission</button>
+          </div>
+        </div>
+
+        <div class="wb-col">
+          <div class="wb-label">LIVE TEMPORAL STATE MACHINE (TSM) JSON STREAM</div>
+          <pre style="background:rgba(0,0,0,0.8); border:1px solid var(--border-subtle); padding:14px; border-radius:4px; font-size:0.75rem; color:var(--green); overflow-x:auto;"><code id="wbJsonOutput">{
+  "framework": "FieldKit v1.0",
+  "status": "INITIALIZING..."
+}</code></pre>
+        </div>
+      </div>
+    </div>
+
     <!-- SDK & CLI Section -->
     <section id="sdk" class="sec-head">
       <h2>Open-Source Python SDK &amp; CLI Runtime</h2>
@@ -400,9 +469,11 @@ fieldkit vault-audit</code></pre>
     FieldKit Open Architectural Standard · Engineered by <strong>1nc0gn30</strong> • 
     <a href="https://nullai.tech">NullAI Platform</a> · 
     <a href="https://github.com/NullAITech/fieldkit">GitHub Repository</a> · 
-    <a href="https://buy.stripe.com/3cIfZg27PdKo2D64Ocfw40X">☕ Buy Us a Coffee</a>
+    <a href="https://buy.stripe.com/3cIfZg27PdKo2D64Ocfw40X" target="_blank" rel="noopener noreferrer">☕ Buy Us a Coffee</a> · 
+    <span style="font-family:var(--mono); color:#94a3b8; font-size:0.80rem;" title="Solana Tip Address">SOL: GG2e...XoK</span>
   </p>
 </footer>
 
+<script src="app.js"></script>
 </body>
 </html>
